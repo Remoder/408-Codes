@@ -1,0 +1,2 @@
+
+            head = cur->nxt;
