@@ -156,7 +156,8 @@ void Linked_List_Without_Head::del_elem(int idx){
     } else {
         printf("Invalid index!\n");
     }
-    len--;
+    if (--len == 0)
+        init();
 }
 
 void Linked_List_Without_Head::set_elem(int idx, int elem){
@@ -171,6 +172,10 @@ void Linked_List_Without_Head::set_elem(int idx, int elem){
 }
 
 void Linked_List_Without_Head::display(){
+    if (!len){
+        cout << "No element!\n";
+        return ;
+    }
     Node *cur = head;
     do {
         printf("%d ", cur->get_val());
@@ -233,7 +238,8 @@ void Linked_List_With_Head::del_elem(int idx){
     } else {
         printf("Invalid index!\n");
     }
-    len--;
+    if (--len == 0)
+        init();
 }
 
 void Linked_List_With_Head::set_elem(int idx, int elem){
@@ -248,6 +254,10 @@ void Linked_List_With_Head::set_elem(int idx, int elem){
 }
 
 void Linked_List_With_Head::display(){
+    if (!len){
+        cout << "No element!\n";
+        return ;
+    }
     Node *cur = head;
     do {
         cur = cur->nxt;

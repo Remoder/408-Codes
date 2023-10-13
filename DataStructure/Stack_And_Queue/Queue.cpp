@@ -30,7 +30,7 @@ void Queue::push(int x){
 }
 
 void Queue::pop(){
-    if (Linked_List_Without_Head::empty()){
+    if (empty()){
         printf("No element!\n");
     } else {
         del_elem(1);
@@ -38,7 +38,7 @@ void Queue::pop(){
 }
 
 int Queue::front(){
-    if (Linked_List_Without_Head::empty()){
+    if (empty()){
         printf("No element!\n");
     } else {
         return get_elem(1);

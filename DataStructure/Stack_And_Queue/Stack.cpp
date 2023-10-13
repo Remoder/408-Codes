@@ -30,7 +30,7 @@ void Stack::push(int x){
 }
 
 void Stack::pop(){
-    if (Linked_List_Without_Head::empty()){
+    if (empty()){
         printf("No element!\n");
     } else {
         del_elem(get_len());
@@ -38,7 +38,7 @@ void Stack::pop(){
 }
 
 int Stack::top(){
-    if (Linked_List_Without_Head::empty()){
+    if (empty()){
         printf("No element!\n");
     } else {
         return get_elem(get_len());
