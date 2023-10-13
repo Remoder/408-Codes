@@ -20,11 +20,6 @@ void stack_test(){
     }
 }
 
-int main(){
-    stack_test();
-    return 0;
-}
-
 void Stack::push(int x){
     insert_elem(get_len()+1, x);
 }

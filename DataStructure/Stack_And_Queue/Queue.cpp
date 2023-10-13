@@ -20,11 +20,6 @@ void queue_test(){
     }
 }
 
-int main(){
-    queue_test();
-    return 0;
-}
-
 void Queue::push(int x){
     insert_elem(get_len()+1, x);
 }
