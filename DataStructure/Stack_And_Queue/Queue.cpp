@@ -3,11 +3,6 @@
 
 class Queue: public Linked_List_Without_Head{
 public:
-    ~Queue(){
-        while (!empty())
-            pop();
-    }
-
     void push(int);
     void pop();
     int front();

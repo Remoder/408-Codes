@@ -9,11 +9,6 @@ public:
     Node *nxt, *pri;
     Node(int _val = 0):
         val(_val), nxt(NULL), pri(NULL) {}
-
-    ~Node(){
-        delete nxt;
-        delete pri;
-    }
     
     int get_val()
         {return val;}
@@ -32,7 +27,12 @@ public:
         len(_len), head(NULL){init();}
 
     ~Linked_List_Base(){
-        delete[] head;
+        Node *_p = head, *_nxt = NULL;
+        while (_p){
+            _nxt = _p->nxt;
+            delete _p;
+            _p = _nxt;
+        }
     }
 
     void init();

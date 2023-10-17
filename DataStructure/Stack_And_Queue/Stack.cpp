@@ -3,11 +3,6 @@
 
 class Stack: public Linked_List_Without_Head{
 public:
-    ~Stack(){
-        while (!empty())
-            pop();
-    }
-    
     void push(int);
     void pop();
     int top();
