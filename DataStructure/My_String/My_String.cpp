@@ -110,7 +110,7 @@ int My_String::index_with_KMP(My_String& sub){
     kmp[0] = 0, kmp[1] = 0;
     for (int i = 2; i <= sub.get_len(); i++){
         int j = kmp[i-1];
-        while (j > 0 && sub.get_ch(i) != sub.get_ch(j+1)) j = kmp[j-1];
+        while (j > 0 && sub.get_ch(i) != sub.get_ch(j+1)) j = kmp[j];
         if (sub.get_ch(i) == sub.get_ch(j+1)) j++;
         kmp[i] = j;
     }
