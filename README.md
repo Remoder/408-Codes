@@ -27,3 +27,9 @@
 > 2023/10/31
 
 `Line 113 in My_String.cpp` 中 `kmp[j-1] -> kmp[j]`。
+
+> 2023/11/02
+
+新增 `Sequence_List.cpp` 中的 `del_elem()`。
+
+完善链表的菜单交互部分。

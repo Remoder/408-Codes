@@ -38,6 +38,12 @@ public:
     void init();
     int get_len();
     bool empty();
+    virtual int get_elem(int) = 0;
+    virtual int get_idx(int) = 0;
+    virtual void insert_elem(int, int) = 0;
+    virtual void del_elem(int) = 0;
+    virtual void set_elem(int, int) = 0;
+    virtual void display() = 0;
 } ;
 
 class Linked_List_Without_Head: public Linked_List_Base{
@@ -60,21 +66,65 @@ public:
     void display();
 } ;
 
-void linked_list_test(){
-    Linked_List_With_Head a;
-    cout << "Add numbers from 1 to 10: ";
-    for (int i = 1; i <= 10; i++)
-        a.insert_elem(i,i);
-    a.display();
-    cout << "After set the 3rd number to 10: ";
-    a.set_elem(3, 10);
-    a.display();
-    cout << "After del the 1th number: ";
-    a.del_elem(1);
-    a.display();
-    cout << "Now the length is " << a.get_len() << ", and the 3rd number is " << a.get_elem(3) << endl;
-    cout << "The first 5 appear at " << a.get_idx(5) << endl;
-    cout << "Test finished\n";
+void Linked_List_test(){
+    int x, y, cur_len, op = 0;
+    Linked_List_Without_Head *a = new Linked_List_Without_Head();
+    cout << "Created Successfully!\n";
+    while (op != 8){
+        cout << "\n***********************\n| 1 x   | : get the x-th element\n| 2 x   | : get the index of value x\n| 3 a b | : insert b as the a-th elemt\n| 4 x   | : delete the x-th element\n| 5 a b | : set the a-th element with value b\n| 6     | : get the length of the list\n| 7     | : display the list\n| 8     | : quit\n***********************\n";
+        cin >> op;
+        switch (op){
+            case 1:
+                cin >> x;
+                if (x < 1 || x > a->get_len()) {cout << "Invalid index!" << endl; break;}
+                cout << "The " << x << "-th element is " << a->get_elem(x) << "." << endl;
+                break;
+            case 2:
+                cin >> x;
+                if (a->get_idx(x) != -1)
+                    cout << x << " is the " << a->get_idx(x) << "-th element." << endl;
+                else 
+                    cout << x << " is not in the list." << endl;
+                break;
+            case 3:
+                cin >> x >> y;
+                cur_len = a->get_len();
+                if (x < 1 || x > a->get_len() + 1) {cout << "Invalid index!" << endl; break;}
+                a->insert_elem(x, y);
+                if (a->get_len() != cur_len)
+                    cout << "Insert successfully." << endl;
+                break;
+            case 4:
+                cin >> x;
+                if (x < 1 || x > a->get_len()) {cout << "Invalid index!" << endl; break;}
+                a->del_elem(x);
+                cout << "The " << x << "-th element has been deleted." << endl;
+                break;
+            case 5:
+                cin >> x >> y;
+                if (x < 1 || x > a->get_len()) {cout << "Invalid index!" << endl; break;}
+                a->set_elem(x, y);
+                cout << "The " << x << "-th element has been " << y << "." << endl;
+                break;
+            case 6:
+                cout << "The length of Sequence List is " << a->get_len() << "." << endl;
+                break;
+            case 7:
+                cout << "The list is: ";
+                a->display();
+                break;
+            case 8:
+                break;
+            default:
+                cout << "Unknown order!" << endl;
+                break;
+        }
+    }   
+}
+
+int main(){
+    Linked_List_test();
+    return 0;
 }
 
 void Linked_List_Base::init(){
