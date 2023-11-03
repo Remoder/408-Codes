@@ -68,7 +68,7 @@ public:
 
 void Linked_List_test(){
     int x, y, cur_len, op = 0;
-    Linked_List_Without_Head *a = new Linked_List_Without_Head();
+    Linked_List_With_Head *a = new Linked_List_With_Head();
     cout << "Created Successfully!\n";
     while (op != 8){
         cout << "\n***********************\n| 1 x   | : get the x-th element\n| 2 x   | : get the index of value x\n| 3 a b | : insert b as the a-th elemt\n| 4 x   | : delete the x-th element\n| 5 a b | : set the a-th element with value b\n| 6     | : get the length of the list\n| 7     | : display the list\n| 8     | : quit\n***********************\n";
@@ -203,6 +203,7 @@ void Linked_List_Without_Head::del_elem(int idx){
             head = cur->nxt;
         if (cur->nxt)
             cur->nxt->pri = cur->pri;
+        delete cur;
     } else {
         printf("Invalid index!\n");
     }
@@ -285,6 +286,7 @@ void Linked_List_With_Head::del_elem(int idx){
         cur->pri->nxt = cur->nxt;
         if (cur->nxt)
             cur->nxt->pri = cur->pri;
+        delete cur;
     } else {
         printf("Invalid index!\n");
     }
