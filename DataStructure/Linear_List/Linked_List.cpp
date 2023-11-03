@@ -122,11 +122,6 @@ void Linked_List_test(){
     }   
 }
 
-int main(){
-    Linked_List_test();
-    return 0;
-}
-
 void Linked_List_Base::init(){
     head = new Node;
     head->nxt = NULL;

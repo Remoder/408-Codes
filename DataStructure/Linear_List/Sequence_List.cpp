@@ -97,11 +97,6 @@ void Sequence_List_test(){
     }   
 }
 
-int main(){
-    Sequence_List_test();
-    return 0;
-}
-
 void Sequence_List::init(int _mem){
     if (_mem < 0){
         printf("Invalid memory!\n");
