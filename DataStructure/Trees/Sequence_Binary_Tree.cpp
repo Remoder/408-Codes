@@ -1,56 +1,36 @@
 #include <iostream>
+#include "..\Stack_And_Queue\Stack.cpp"
 using namespace std;
 
-class Node{
-private:
-    int val; int id;
-public:
-    Node(int _id=0, int _val=0):
-        val(_val), id(_id){}
-    int get_val()
-        {return val;}
-    void set_val(int _val)
-        {val = _val;}
-    int get_id()
-        {return id;}
-    void set_id(int _id)
-        {id = _id;}
-} ;
+const int MEMORY = 130;
 
 class Sequence_Binary_Tree{
-private:
-    Node *t;
-    int mem;
 public:
-    Sequence_Binary_Tree(int _mem=10){
-        init(_mem);
-    }
+    int t[MEMORY]; 
 
-    ~Sequence_Binary_Tree(){
-        delete[] t;
+public:
+    Sequence_Binary_Tree(){
+        for (int i = 1; i < MEMORY; i++)
+            t[i] = 0;
     }
 
     void init(int);
-    bool is_valid_idx(int);
-    int get_idx_of_id(int, int);
-    void destroy(int);
-    void add(int, char, int, int);
-    void pre_order(int);
-    void in_order(int);
-    void post_order(int);
+    void set(int, int);
+    void increase(int);
+    void pre_order();
+    void in_order();
+    void post_order();
 } ;
 
 void Sequence_Binary_Tree_test(){
-    int a, b, c; char ch;
+    int n, x, y;
+    cin >> n;
     Sequence_Binary_Tree *t = new Sequence_Binary_Tree();
-    while (cin >> a >> ch >> b >> c){
-        t->add(a, ch, b, c);
+    while (cin >> x >> y){
+        t->set(x, y);
     }
-    cout << t->is_valid_idx(3) << endl;
-    // t->pre_order(1); cout << endl;
-    // t->in_order(1); cout << endl;
-    // t->post_order(1); cout << endl;
-    return ;
+    t->pre_order();
+    t->in_order();
 }
 
 int main(){
@@ -58,72 +38,43 @@ int main(){
     return 0;
 }
 
-void Sequence_Binary_Tree::init(int _mem){
-    mem = (1<<_mem);
-    t = new Node(mem+1);
+void Sequence_Binary_Tree::set(int idx, int val){
+    if (idx < 1 || idx > MEMORY)
+        printf("Invalid index!\n");
+    else
+        t[idx] = val;
 }
 
-bool Sequence_Binary_Tree::is_valid_idx(int idx){
-    cout << idx << ' ' << t[idx].get_id() << endl;
-    return idx <= mem && t[idx].get_id();
-}
-
-int Sequence_Binary_Tree::get_idx_of_id(int idx, int goal_id){
-    int res = 0;
-    if (goal_id == 0)
-        return 0;
-    if (t[idx].get_id() == goal_id)
-        res = idx;
-    else {
-        if (!res && is_valid_idx(idx*2))
-            res = get_idx_of_id(idx*2, goal_id);
-        if (!res && is_valid_idx(idx*2+1))
-            res = get_idx_of_id(idx*2+1, goal_id);
+void Sequence_Binary_Tree::pre_order(){
+    int id = 1;
+    Stack s; s.push(id);
+    while ((id <= MEMORY && t[id]) || !s.empty()){
+        if (t[id]){
+            cout << t[id] << ' '; 
+            id *= 2;
+            if (t[id])
+                s.push(id);
+        } else {
+            id = s.top(); s.pop();
+            id = id * 2 + 1;
+            if (t[id])
+                s.push(id);
+        }
     }
-    return res;
+    cout << endl;
 }
 
-void Sequence_Binary_Tree::destroy(int id){
-    int idx = get_idx_of_id(1, id);
-    if (is_valid_idx(idx*2))
-        destroy(id*2);
-    if (is_valid_idx(idx*2+1))
-        destroy(id*2+1);
-    t[id].set_id(0);
-}
-
-void Sequence_Binary_Tree::add(int f, char ch, int id, int val){
-    int idx = get_idx_of_id(1, f);
-    int goal_idx = (ch == 'r' ? idx*2 : idx*2+1);
-    if (is_valid_idx(goal_idx)){
-        t[goal_idx].set_id(id);
-        t[goal_idx].set_val(val);
+void Sequence_Binary_Tree::in_order(){
+    int id = 1; Stack s;
+    while ((id <= MEMORY && t[id]) || !s.empty()){
+        if (t[id]){
+            s.push(id);
+            id *= 2;
+        } else {
+            id = s.top(); s.pop();
+            cout << t[id] << ' ';
+            id = id * 2 + 1;
+        }
     }
-}
-
-void Sequence_Binary_Tree::pre_order(int idx){
-    if (t[idx].get_id())
-        printf("%d ", t[idx].get_val());
-    if (is_valid_idx(idx*2))
-        pre_order(idx*2);
-    if (is_valid_idx(idx*2+1))
-        pre_order(idx*2+1);
-}
-
-void Sequence_Binary_Tree::in_order(int idx){
-    if (is_valid_idx(idx*2))
-        in_order(idx*2);
-    if (t[idx].get_id())
-        printf("%d ", t[idx].get_val());
-    if (is_valid_idx(idx*2+1))
-        in_order(idx*2+1);
-}
-
-void Sequence_Binary_Tree::post_order(int idx){
-    if (is_valid_idx(idx*2))
-        post_order(idx*2);
-    if (is_valid_idx(idx*2+1))
-        post_order(idx*2+1);
-    if (t[idx].get_id())
-        printf("%d ", t[idx].get_val());
+    cout << endl;
 }
