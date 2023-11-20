@@ -21,14 +21,14 @@ void stack_test(){
 }
 
 void Stack::push(int x){
-    insert_elem(get_len()+1, x);
+    insert_elem(1, x);
 }
 
 void Stack::pop(){
     if (empty()){
         printf("No element!\n");
     } else {
-        del_elem(get_len());
+        del_elem(1);
     }
 }
 
@@ -36,6 +36,6 @@ int Stack::top(){
     if (empty()){
         printf("No element!\n");
     } else {
-        return get_elem(get_len());
+        return get_elem(1);
     }
 }
