@@ -1,0 +1,2 @@
+;
+    t->display_tree();
