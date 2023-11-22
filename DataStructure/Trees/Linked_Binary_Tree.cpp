@@ -1,7 +1,6 @@
 #include <iostream>
 using namespace std;
 
-
 class Node{
 private:
     int val, id;
@@ -19,7 +18,7 @@ public:
 } ;
 
 class Linked_Binary_Tree{
-private:
+public:
     Node *rt; bool ltag, rtag;
     Linked_Binary_Tree *ls, *rs, *fa;
 
@@ -28,8 +27,13 @@ private:
     Linked_Binary_Tree* in_order_thread_find_last_tree();
     Linked_Binary_Tree* in_order_thread_find_nxt_tree();
     Linked_Binary_Tree* in_order_thread_find_pre_tree();
+    Linked_Binary_Tree* pre_order_thread_find_last_tree();
     Linked_Binary_Tree* pre_order_thread_find_nxt_tree();
-    void clear_thread();
+    Linked_Binary_Tree* pre_order_thread_find_pre_tree();
+    Linked_Binary_Tree* post_order_thread_find_first_tree();
+    Linked_Binary_Tree* post_order_thread_find_nxt_tree();
+    Linked_Binary_Tree* post_order_thread_find_pre_tree();
+    void clear_thread(); // clear all thread
     void in_thread(); // used for function <create_in_thread>
     void pre_thread(); // used for function <create_pre_thread>
     void post_thread(); // used for function <create_post_thread>
@@ -46,40 +50,94 @@ public:
     void init(Node*);
     void destroy();
     void add(int, char, int, int); // add (id, val) as a [ch](l/r) son of (f)
+    void display_tree();
+
+    /* Functions about visit order recursively*/
     void recursive_pre_order();
     void recursive_in_order();
     void recursive_post_order();
-    void create_in_thread(); // create in-order thread 
-    void thread_in_order();  // in-order visit by thread
+
+    /* Functions about in-order thread */
+    void create_in_thread(); // create in-order thread tree
+    void thread_in_order();  // in-order visit by thread 
     void reverse_thread_in_order(); // reversed in-order visit by thread
-    void create_pre_thread(); // create pre-order thread
+
+    /* Functions about pre-order thread */
+    void create_pre_thread(); // create pre-order thread tree
     void thread_pre_order(); // pre-order visit by thread
     void reverse_thread_pre_order(); // reversed pre-order visit by thread
-    void display_tree();
+
+    /* Functions about post-order thread */
+    void create_post_thread(); // create post-order thread tree
+    void thread_post_order(); // post-order visit by thread
+    void reverse_thread_post_order(); // reversed post-order visit by thread
 } ;
 
 Linked_Binary_Tree* pre = NULL; // used for create thread
 
 void Linked_Binary_Tree_test(){
-    int a, b, c; char ch;
+    int a, b, c, n, x, s=0; char ch;
     Linked_Binary_Tree* t = new Linked_Binary_Tree();
-    while (cin >> a >> ch >> b >> c){
+    printf("Please enter the size of Tree: ");
+    cin >> n;
+    for (int i = 1; i <= n; i++){
+        cout << "\nAdd [fa]'s [l/r] son (id, val), now enter [fa], [l/r], [id], [val]: ";
+        cin >> a >> ch >> b >> c;
         t->add(a, ch, b, c);
     }
-    // Tree Check
-    t->recursive_pre_order(); cout << endl;
-    // t->recursive_in_order(); cout << endl;
-    // t->recursive_post_order(); cout << endl;
-
-    // In-order Tread Check
-    // t->create_in_thread();
-    // t->display_tree();
-    // t->thread_in_order();
-
-    // Pre-order Tread Check
-    t->create_pre_thread();
-    // t->display_tree();
-    t->thread_pre_order();
+    while (n){
+        printf("\n***************************\n| 0 | : Exit\n| 1 | : Build thread tree\n| 2 | : Visit by thread\n| 3 | : Visit recursively\n| 4 | : Display the tree\n***************************\n");
+        cin >> n;
+        switch (n){
+            case 0:
+                break;
+            case 1:
+                printf("\n***************************\n| 0 | : Exit\n| 1 | : Pre-Order\n| 2 | : In-Order\n| 3 | : Post-Order\n***************************\n");
+                cin >> x;
+                switch (x){
+                    case 1: t->create_pre_thread(); s = 1; break; 
+                    case 2: t->create_in_thread(); s = 2; break;
+                    case 3: t->create_post_thread(); s = 3; break;
+                    default: break;
+                }
+                break;
+            case 2:
+                if (!s){
+                    printf("Thread should be built previously!");
+                    break;
+                } else {
+                    printf("\n***************************\n| 0 | : Exit\n| 1 | : Ordered\n| 2 | : Reversed\n***************************\n");
+                    cin >> x;
+                    switch (x){
+                        case 1: 
+                            if (s == 1) {t->thread_pre_order(); break;}
+                            if (s == 2) {t->thread_in_order(); break;}
+                            if (s == 3) {t->thread_post_order(); break;}
+                        case 2:
+                            if (s == 1) {t->reverse_thread_pre_order(); break;}
+                            if (s == 2) {t->reverse_thread_in_order(); break;}
+                            if (s == 3) {t->reverse_thread_post_order(); break;}
+                        default: break;
+                    }
+                }
+                break;
+            case 3:
+                printf("\n***************************\n| 0 | : Exit\n| 1 | : Pre-Order\n| 2 | : In-Order\n| 3 | : Post-Order\n***************************\n");
+                cin >> x;
+                switch (x){
+                    case 1: t->recursive_pre_order(); break;
+                    case 2: t->recursive_in_order(); break;
+                    case 3: t->recursive_post_order(); break;
+                    default: break;
+                }
+                break;
+            case 4:
+                t->display_tree();
+                break;
+            default:
+                printf("Unknown order!\n");
+        }
+    }
     return ;
 }
 
@@ -180,9 +238,43 @@ Linked_Binary_Tree* Linked_Binary_Tree::in_order_thread_find_pre_tree(){
     return ls->in_order_thread_find_last_tree();
 }
 
+Linked_Binary_Tree* Linked_Binary_Tree::pre_order_thread_find_last_tree(){
+    if (rs && !rtag) return rs->pre_order_thread_find_last_tree();
+    if (ls && !ltag) return ls->pre_order_thread_find_last_tree();
+    if (ltag && rtag) return this; 
+}
+
 Linked_Binary_Tree* Linked_Binary_Tree::pre_order_thread_find_nxt_tree(){
     if (ls && !ltag) return ls;
     if (rs) return rs;
+}
+
+Linked_Binary_Tree* Linked_Binary_Tree::pre_order_thread_find_pre_tree(){
+    if (ltag) return ls;
+    if (!fa) return NULL;
+    if (fa->ls == this) return fa;
+    if (fa->rs == this && fa->ltag) return fa;
+    if (fa->rs == this && !fa->ltag) return fa->ls->pre_order_thread_find_last_tree();
+}
+
+Linked_Binary_Tree* Linked_Binary_Tree::post_order_thread_find_first_tree(){
+    Linked_Binary_Tree* p = this;
+    while (p->ls && !p->ltag)
+        p = p->ls;
+    return p;
+}
+
+Linked_Binary_Tree* Linked_Binary_Tree::post_order_thread_find_nxt_tree(){
+    if (rtag) return rs;
+    if (!fa) return NULL;
+    if (fa->rs == this) return fa;
+    if (fa->ls == this && fa->rtag) return fa;
+    if (fa->ls == this && !fa->rtag) return fa->rs->post_order_thread_find_first_tree();
+}
+
+Linked_Binary_Tree* Linked_Binary_Tree::post_order_thread_find_pre_tree(){
+    if (rs && !rtag) return rs;
+    if (ls) return ls;
 }
 
 void Linked_Binary_Tree::clear_thread(){
@@ -262,6 +354,46 @@ void Linked_Binary_Tree::thread_pre_order(){
     cout << endl;
 }
 
+void Linked_Binary_Tree::reverse_thread_pre_order(){
+    for (Linked_Binary_Tree* p = pre_order_thread_find_last_tree(); p; p = p->pre_order_thread_find_pre_tree())
+        cout << p->rt->get_val() << ' ';
+    cout << endl;
+}
+
+void Linked_Binary_Tree::post_thread(){
+    if (ls && !ltag)
+        ls->post_thread();
+    if (rs && !rtag)
+        rs->post_thread();
+    if (!ls && !ltag){
+        ls = pre;
+        ltag = 1;
+    }
+    if (pre && !pre->rs && !pre->rtag){
+        pre->rs = this;
+        pre->rtag = 1;
+    }
+    pre = this;
+}
+
+void Linked_Binary_Tree::create_post_thread(){
+    clear_thread();
+    pre = NULL; // this is a global var
+    post_thread();
+}
+
+void Linked_Binary_Tree::thread_post_order(){
+    for (Linked_Binary_Tree* p = post_order_thread_find_first_tree(); p; p = p->post_order_thread_find_nxt_tree())
+        cout << p->rt->get_val() << ' ';
+    cout << endl;
+}
+
+void Linked_Binary_Tree::reverse_thread_post_order(){
+    for (Linked_Binary_Tree* p = this; p; p = p->post_order_thread_find_pre_tree())
+        cout << p->rt->get_val() << ' ';
+    cout << endl;
+}
+
 void Linked_Binary_Tree::display_tree(){
     if (ls && !ltag)
         ls->display_tree();
@@ -271,6 +403,7 @@ void Linked_Binary_Tree::display_tree(){
 }
 
 /*
+A test data:
 0 l 1 1
 1 l 2 2
 1 r 3 3
