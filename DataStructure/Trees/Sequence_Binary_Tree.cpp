@@ -33,11 +33,6 @@ void Sequence_Binary_Tree_test(){
     t->in_order();
 }
 
-int main(){
-    Sequence_Binary_Tree_test();
-    return 0;
-}
-
 void Sequence_Binary_Tree::set(int idx, int val){
     if (idx < 1 || idx > MEMORY)
         printf("Invalid index!\n");

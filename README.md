@@ -56,3 +56,8 @@
 
 链式树的菜单交互部分。
 
+> 2023/12/02
+
+链式树对于 `add` 的重载，拓展到将另一棵树作为子树添加进来。
+
+哈夫曼树的实现。过程中发现 `priority_queue` 对指针元素不能正确应用重载的运算符，详见[文档](https://en.cppreference.com/w/cpp/utility/functional/greater)，必须借助比较函数来实现。（[参考文章](https://blog.csdn.net/auccy/article/details/126119520)）

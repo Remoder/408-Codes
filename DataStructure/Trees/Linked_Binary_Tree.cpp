@@ -4,6 +4,7 @@ using namespace std;
 class Node{
 private:
     int val, id;
+
 public:
     Node(int _id=0, int _val=0):
         val(_val), id(_id){}
@@ -18,8 +19,8 @@ public:
 } ;
 
 class Linked_Binary_Tree{
-public:
-    Node *rt; bool ltag, rtag;
+private:
+    bool ltag, rtag;
     Linked_Binary_Tree *ls, *rs, *fa;
 
     /* used for functions about thread */
@@ -37,19 +38,24 @@ public:
     void in_thread(); // used for function <create_in_thread>
     void pre_thread(); // used for function <create_pre_thread>
     void post_thread(); // used for function <create_post_thread>
-    bool is_used_id(int);
+
+    bool is_used_id(int); // if id has been used in this tree or not
+    bool is_comflict(Linked_Binary_Tree*); // if the two trees comflict because of id or not
 
 public:
+    Node *rt;
+
     Linked_Binary_Tree(Node *_rt=NULL):
         rt(NULL), ls(NULL), rs(NULL), fa(NULL), ltag(0), rtag(0) {init(_rt);}
 
     ~Linked_Binary_Tree(){
-        destroy();        
+        destroy();
     }
 
     void init(Node*);
     void destroy();
     void add(int, char, int, int); // add (id, val) as a [ch](l/r) son of (f)
+    void add(int, char, Linked_Binary_Tree*); // add (other_tree) as a [ch](l/r) son of (f) 
     void display_tree();
 
     /* Functions about visit order recursively*/
@@ -141,11 +147,6 @@ void Linked_Binary_Tree_test(){
     return ;
 }
 
-int main(){
-    Linked_Binary_Tree_test();
-    return 0;
-}
-
 void Linked_Binary_Tree::init(Node *_rt){
     if (_rt) rt = _rt;
     else rt = new Node;
@@ -169,6 +170,16 @@ bool Linked_Binary_Tree::is_used_id(int id){
     return false;
 }
 
+bool Linked_Binary_Tree::is_comflict(Linked_Binary_Tree* other_tree){
+    if (other_tree->is_used_id(rt->get_id()))
+        return true;
+    if (ls && ls->is_comflict(other_tree))
+        return true;
+    if (rs && rs->is_comflict(other_tree))
+        return true;
+    return false;
+}
+
 void Linked_Binary_Tree::add(int f, char ch, int id, int val){
     if (!f){
         rt->set_id(id);
@@ -181,15 +192,49 @@ void Linked_Binary_Tree::add(int f, char ch, int id, int val){
         printf("The id has been used!\n");
         return ;
     }
+    if (!is_used_id(f)){
+        if (!fa) // raise the message when there is no such a father id in the whole tree
+            printf("No such a father node!\n");
+        return ;
+    }
     if (rt->get_id() == f){ // find father node.
         if (ch == 'l' && !ls) 
             ls = p;
-        if (ch == 'r' && !rs) 
+        if (ch == 'r' && !rs)
             rs = p;
         p->fa = this;
     } else {
         if (ls) ls->add(f, ch, id, val);
         if (rs) rs->add(f, ch, id, val);
+    }
+}
+
+void Linked_Binary_Tree::add(int f, char ch, Linked_Binary_Tree* other_tree){
+    if (!f) {
+        printf("No such a father node!\n");
+        return ;
+    }
+    if (!is_used_id(f)){
+        if (!fa) // raise the message when there is no such a father id in the whole tree
+            printf("No such a father node!\n");
+        return ;
+    }
+    if (is_comflict(other_tree)){
+        printf("Repeated id exist!\n");
+        return ;
+    }
+    if (rt->get_id() == f){
+        if (ch == 'l' && !ls){
+            ls = other_tree;
+            other_tree->fa = this;
+        }
+        if (ch == 'r' && !rs){
+            rs = other_tree;
+            other_tree->fa = this;   
+        }
+    } else {
+        if (ls) ls->add(f, ch, other_tree);
+        if (rs) rs->add(f, ch, other_tree);
     }
 }
 
@@ -397,7 +442,7 @@ void Linked_Binary_Tree::reverse_thread_post_order(){
 void Linked_Binary_Tree::display_tree(){
     if (ls && !ltag)
         ls->display_tree();
-    printf("[%d]'s father is %d, while left_son is %d and right_son is %d.\n", rt ? rt->get_id() : 0, fa ? fa->rt->get_id() : 0, ls ? ls->rt->get_id() : 0, rs ? rs->rt->get_id() : 0);
+    printf("[%d, %d]'s father is %d, while left_son is %d and right_son is %d.\n", rt ? rt->get_id() : 0, rt ? rt->get_val() : 0, fa ? fa->rt->get_id() : 0, ls ? ls->rt->get_id() : 0, rs ? rs->rt->get_id() : 0);
     if (rs && !rtag)
         rs->display_tree();
 }
